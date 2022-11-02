@@ -1,0 +1,28 @@
+- name: Deploy configuration template
+  ansible.builtin.template:
+    src: templates/config.yaml.j2
+    dest: /etc/nebula/config.yaml
+    owner: root
+    group: root
+    mode: "0600"
+  register: nebula_config
+  notify:
+    - Restart_nebula
+
+- name: Verify configuration
+  ansible.builtin.command: "{{ nebula_bin_directory }}/nebula -test -config /etc/nebula/config.yaml 1>/dev/null"
+  changed_when: false
+
+- name: Deploy systemd template
+  template:
+    dest: /etc/systemd/system/nebula.service
+    src: nebula.service.j2
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable Nebula service
+  service:
+    name: nebula
+    state: started
+    enabled: yes

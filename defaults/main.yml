@@ -1,0 +1,62 @@
+# defaults file for .
+nebula_version: 1.6.1
+
+# location of the nebula binaries
+nebula_bin_directory: /bin
+nebula_config_directory: /etc/nebula
+
+temp_node_crt: "/tmp/{{ inventory_hostname }}.crt"
+temp_node_key: "/tmp/{{ inventory_hostname }}.key"
+
+ca_crt: /tmp/nebula/ca.crt
+ca_key: /tmp/nebula/ca.key
+
+# force overwrite
+nebula_force_install: false
+
+# this will cause net.ipv4.ip_forward to be set to 1 to allow unsafe routes
+enable_ip_forward: false
+
+tun:
+  dev_name: nebula1
+  drop_local_broadcast: false
+  drop_multicast: false
+  tx_queue: 500
+  mtu: 1300
+
+logging:
+  # panic, fatal, error, warning, info, or debug. Default is info
+  level: info
+  # json or text formats currently available. Default is text
+  format: text
+
+stats:
+  enabled: false
+  type: prometheus
+  listen: 127.0.0.1:8080
+  path: /metrics
+  namespace: prometheusns
+  subsystem: nebula
+  interval: 10s
+
+pki:
+  ca: /etc/nebula/ca.crt
+  cert: /etc/nebula/host.crt
+  key: /etc/nebula/host.key
+
+listen:
+  host: 0.0.0.0
+  port: 4242
+
+punchy: "true"
+punch_back: "true"
+
+outbound:
+  - port: any
+    proto: any
+    host: any
+
+inbound:
+  - port: any
+    proto: icmp
+    host: any

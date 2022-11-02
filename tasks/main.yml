@@ -1,0 +1,12 @@
+---
+- include_tasks: install.yml
+
+- name: Check if certificate exists
+  stat:
+    path: "/etc/nebula/{{ inventory_hostname }}.crt"
+  register: nebula_host_crt
+
+- include_tasks: certs.yml
+  when: nebula_host_crt.stat.exists == false
+
+- include_tasks: config.yml

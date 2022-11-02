@@ -1,0 +1,44 @@
+---
+- name: Remove local certificates (if present)
+  local_action:
+    module: ansible.builtin.file
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ temp_node_crt }}"
+    - "{{ temp_node_key }}"
+
+- name: Create new certificate
+  become: no
+  local_action:
+    module: ansible.builtin.command
+    argv:
+      - "{{ nebula_bin_directory }}/nebula-cert"
+      - sign
+      - "-name={{ inventory_hostname }}"
+      - "-ip={{ nebula_ip }}/24"
+      - "-ca-key={{ ca_key }}"
+      - "-ca-crt={{ ca_crt }}"
+      - "-out-crt={{ temp_node_crt }}"
+      - "-out-key={{ temp_node_key }}"
+
+- name: Copy certificate and key
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ nebula_config_directory }}"
+    owner: root
+    group: root
+    mode: '0600'
+  with_items:
+    - "{{ temp_node_crt }}"
+    - "{{ temp_node_key }}"
+    - "{{ ca_crt }}"
+
+- name: Cleanup local certificates (if present)
+  local_action:
+    module: ansible.builtin.file
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ temp_node_crt }}"
+    - "{{ temp_node_key }}"
