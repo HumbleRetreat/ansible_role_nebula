@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Roland von Ohlen
+  description: Manage a cloud of Nebula Lighthouses and Nodes
+  company: Humble Retreat
+  issue_tracker_url: https://github.com/HumbleRetreat/ansible_role_nebula
+  license: MIT
+  min_ansible_version: 1.8
+  platforms:
+    - name: Almalinux
+      versions:
+        - all
+
+  galaxy_tags:
+    - nebula
+    - vpn
+
+dependencies: []
